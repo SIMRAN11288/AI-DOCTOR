@@ -40,8 +40,6 @@ if main_symptom and not st.session_state.questions:
     response=llm.invoke(formatted_prompt)
 
     st.session_state.questions = [q.strip() for q in response.content.split("\n") if q.strip()]
-    
-st.write("FSQ API Key:", FSQ_API_KEY)
    
 if st.session_state.questions:
     current_question= st.session_state.questions[st.session_state.current_q]
@@ -133,4 +131,5 @@ if current_location:
     
             
             
+
 
