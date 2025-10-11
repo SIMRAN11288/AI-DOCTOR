@@ -10,8 +10,6 @@ import os
 # Load .env file
 load_dotenv()
 
-FSQ_API_KEY = os.getenv("FSQ_API_KEY") 
-
 st.title("AI Doctor Assistant")
 st.write('enter patient details')
 st.text_input("what is your name")
@@ -135,3 +133,4 @@ if current_location:
     
             
             
+
