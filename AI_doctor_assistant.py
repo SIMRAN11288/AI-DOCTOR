@@ -63,8 +63,7 @@ disease=PromptTemplate.from_template("after analysing patient's data detect the 
 
 parser=StrOutputParser()
 precautions=PromptTemplate.from_template("Patient data:/n{patient_data}/n/nProbable disease: {disease}/n/n"
-    "Suggest a few precautions to take while suffering from {disease} in easy terms so that all can understand."
-    "Also, recommend few homeopathy or herbal medicine with no side-effects if possible")
+    "Suggest a few precautions to take while suffering from {disease} in easy terms so that all can understand.")
 format_disease=RunnableLambda(lambda disease: {'patient_data':patient_data,
                     'disease':disease})
 chain=disease|llm|parser|format_disease|precautions|llm|parser
@@ -131,4 +130,5 @@ if current_location:
     
             
             
+
 
