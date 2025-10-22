@@ -28,34 +28,6 @@ if "answers" not in st.session_state:      #dictionary {q:ans}
 if "follow_up" not in st.session_state:
     st.session_state.follow_up=False
     
-
-if main_symptom and not st.session_state.questions:
-    prompt=PromptTemplate(
-    template="according to the {symptom} asked 2-3 more related questions from the patient to understand the disease more precisely"
-    "Do not include explanations, introductions, or numbering. "
-    "Return each question on a new line.",
-    input_variables=['symptom']
-    )
-    formatted_prompt=prompt.format(symptom=main_symptom)
-    response=llm.invoke(formatted_prompt)
-
-    st.session_state.questions = [q.strip() for q in response.content.split("\n") if q.strip()]
-   
-if st.session_state.questions:
-    current_question= st.session_state.questions[st.session_state.current_q]
-    st.write(f"Question{st.session_state.current_q + 1}:{current_question}")
-    
-    answer=st.text_input("answer",key=f"answer{st.session_state.current_q}")
-    
-    if st.button("Next"):
-        if answer.strip():
-            st.session_state.answers[current_question]=answer
-            if st.session_state.current_q +1 < len(st.session_state.questions):
-                st.session_state.current_q+=1
-            else:
-                st.success("All questions are answered")
-                st.write("collected answers",st.session_state.answers)
-                st.session_state.follow_up=True
 patient_data="\n".join([f"{q}:{a}" for q,a in st.session_state.answers.items()])
 
             
@@ -66,7 +38,7 @@ precautions=PromptTemplate.from_template("Patient data:/n{patient_data}/n/nProba
     "Suggest a few precautions to take while suffering from {disease} in easy terms so that all can understand.")
 format_disease=RunnableLambda(lambda disease: {'patient_data':patient_data,
                     'disease':disease})
-chain=disease|llm|parser|format_disease|precautions|llm|parser
+chain=disease|llm|parser|precautions|llm|parser
 result=chain.invoke ({"patient_data":patient_data})
 st.write("Probable disease and precaution")
 st.write(result)
@@ -130,5 +102,6 @@ if current_location:
     
             
             
+
 
 
