@@ -64,6 +64,9 @@ if main_symptom:
     )
 
     if current_location:
+        #Normalize the location 
+        current_location = current_location.strip().capitalize()
+
         # Clean the doctor type text
         doctor_type = re.sub(r"[^a-zA-Z ]", "", doctor_type).lower().split()[-1]
 
@@ -105,3 +108,4 @@ if main_symptom:
                 st.write("---")
         else:
             st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
+
