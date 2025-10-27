@@ -101,6 +101,7 @@ if main_symptom:
             st.subheader(f"🏥 Nearby {doctor_type.title()}s in {current_location}:")
             for element in results[:5]:  # Show top 5 results
                 name = element["tags"].get("name", "Unknown")
+                phone = element["tags"].get("phone") or element["tags"].get("contact:phone", "Not available")
                 lat = element.get("lat")
                 lon = element.get("lon")
                 st.write(f"**{name}**")
@@ -108,4 +109,5 @@ if main_symptom:
                 st.write("---")
         else:
             st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
+
 
