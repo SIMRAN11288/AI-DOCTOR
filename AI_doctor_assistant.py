@@ -124,14 +124,15 @@ if main_symptom:
                 st.write(f"📞 Phone: {phone}")
                 st.write(f"📍 [Location on Map](https://www.openstreetmap.org/?mlat={lat}&mlon={lon}#map=18/{lat}/{lon})")
                 st.write("---")
-        else:
-            # Fallback local doctors
-            fallback_doctors = [d for d in doctor_list if doctor_type in d["specialization"].lower()]
-            if fallback_doctors:
-                st.subheader(f"🏥 Suggested {doctor_type.title()}s from local list:")
-                for doc in fallback_doctors:
-                    st.write(f"**{doc['name']}**")
-                    st.write(f"📞 Phone: {doc['phone']}")
-                    st.write("---")
+        #else:
+                # Fallback local doctors
+                fallback_doctors = [d for d in doctor_list if doctor_type in d["specialization"].lower()]
+                if fallback_doctors:
+                    st.subheader(f"🏥 Suggested {doctor_type.title()}s from local list:")
+                    for doc in fallback_doctors:
+                        st.write(f"**{doc['name']}**")
+                        st.write(f"📞 Phone: {doc['phone']}")
+                        st.write("---")
             else:
                 st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
+
