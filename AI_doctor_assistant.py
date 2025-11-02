@@ -81,6 +81,20 @@ if main_symptom:
           node["amenity"="hospital"](area.a);
         );
         out;
+        # --- Load doctors from text file ---
+        doctor_list = []
+        if os.path.exists("doctors.txt"):
+            with open("doctors.txt", "r") as f:
+                for line in f:
+                    parts = line.strip().split(",")
+                    if len(parts) == 3:
+                        name, specialization, phone = [p.strip() for p in parts]
+                        doctor_list.append({
+                            "name": name,
+                            "specialization": specialization.lower(),
+                            "phone": phone
+                        })
+
         """
 
         try:
@@ -96,6 +110,17 @@ if main_symptom:
             data = {"elements": []}
 
         results = data.get("elements", [])
+        else:
+    # Try fallback local list
+    fallback_doctors = [d for d in doctor_list if doctor_type in d["specialization"].lower()]
+    if fallback_doctors:
+        st.subheader(f"🏥 Suggested {doctor_type.title()}s from local list:")
+        for doc in fallback_doctors:
+            st.write(f"**{doc['name']}**")
+            st.write(f"📞 Phone: {doc['phone']}")
+            st.write("---")
+    else:
+        st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
 
         if results:
             st.subheader(f"🏥 Nearby {doctor_type.title()}s in {current_location}:")
@@ -110,6 +135,7 @@ if main_symptom:
                 st.write("---")
         else:
             st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
+
 
 
 
