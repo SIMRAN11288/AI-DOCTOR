@@ -35,7 +35,7 @@ if main_symptom:
 
     precautions_prompt = PromptTemplate.from_template(
         "Patient data:\n{patient_data}\n\nProbable disease: {disease}\n\n"
-        "Suggest a few precautions to take while suffering from {disease} in simple language so that everyone can understand. "
+        "Suggest a few precautions to take while suffering from {disease} in simple language so that everyone can understand."
     )
 
     format_disease = RunnableLambda(
@@ -64,11 +64,25 @@ if main_symptom:
     )
 
     if current_location:
-        #Normalize the location 
+        # Normalize the location 
         current_location = current_location.strip().capitalize()
 
         # Clean the doctor type text
         doctor_type = re.sub(r"[^a-zA-Z ]", "", doctor_type).lower().split()[-1]
+
+        # --- Load doctors from text file ---
+        doctor_list = []
+        if os.path.exists("doctors.txt"):
+            with open("doctors.txt", "r") as f:
+                for line in f:
+                    parts = line.strip().split(",")
+                    if len(parts) == 3:
+                        name_d, specialization, phone = [p.strip() for p in parts]
+                        doctor_list.append({
+                            "name": name_d,
+                            "specialization": specialization.lower(),
+                            "phone": phone
+                        })
 
         # Build the Overpass query
         query = f"""
@@ -81,22 +95,9 @@ if main_symptom:
           node["amenity"="hospital"](area.a);
         );
         out;
-        # --- Load doctors from text file ---
-        doctor_list = []
-        if os.path.exists("doctors.txt"):
-            with open("doctors.txt", "r") as f:
-                for line in f:
-                    parts = line.strip().split(",")
-                    if len(parts) == 3:
-                        name, specialization, phone = [p.strip() for p in parts]
-                        doctor_list.append({
-                            "name": name,
-                            "specialization": specialization.lower(),
-                            "phone": phone
-                        })
-
         """
 
+        # API call
         try:
             response = requests.get(
                 "https://overpass-api.de/api/interpreter",
@@ -110,32 +111,27 @@ if main_symptom:
             data = {"elements": []}
 
         results = data.get("elements", [])
-        else:
-    # Try fallback local list
-    fallback_doctors = [d for d in doctor_list if doctor_type in d["specialization"].lower()]
-    if fallback_doctors:
-        st.subheader(f"🏥 Suggested {doctor_type.title()}s from local list:")
-        for doc in fallback_doctors:
-            st.write(f"**{doc['name']}**")
-            st.write(f"📞 Phone: {doc['phone']}")
-            st.write("---")
-    else:
-        st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
 
+        # Show nearby or fallback
         if results:
             st.subheader(f"🏥 Nearby {doctor_type.title()}s in {current_location}:")
-            for element in results[:5]:  # Show top 5 results
-                name = element["tags"].get("name", "Unknown")
+            for element in results[:5]:
+                name_d = element["tags"].get("name", "Unknown")
                 phone = element["tags"].get("phone") or element["tags"].get("contact:phone", "Not available")
                 lat = element.get("lat")
                 lon = element.get("lon")
-                st.write(f"**{name}**")
+                st.write(f"**{name_d}**")
                 st.write(f"📞 Phone: {phone}")
                 st.write(f"📍 [Location on Map](https://www.openstreetmap.org/?mlat={lat}&mlon={lon}#map=18/{lat}/{lon})")
                 st.write("---")
         else:
-            st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
-
-
-
-
+            # Fallback local doctors
+            fallback_doctors = [d for d in doctor_list if doctor_type in d["specialization"].lower()]
+            if fallback_doctors:
+                st.subheader(f"🏥 Suggested {doctor_type.title()}s from local list:")
+                for doc in fallback_doctors:
+                    st.write(f"**{doc['name']}**")
+                    st.write(f"📞 Phone: {doc['phone']}")
+                    st.write("---")
+            else:
+                st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
