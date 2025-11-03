@@ -57,6 +57,7 @@ if main_symptom:
 
     chain2 = doctors_call | llm | parser
     doctor_type = chain2.invoke({'DATA': patient_data}).strip()
+    doctor_type = re.sub(r"[^a-zA-Z ]", "", doctor_type).lower().strip()
 
     # Location input
     current_location = st.text_input(
@@ -64,11 +65,7 @@ if main_symptom:
     )
 
     if current_location:
-        # Normalize the location 
         current_location = current_location.strip().capitalize()
-
-        # Clean the doctor type text
-        doctor_type = re.sub(r"[^a-zA-Z ]", "", doctor_type).lower().split()[-1]
 
         # --- Load doctors from text file ---
         doctor_list = []
@@ -78,12 +75,17 @@ if main_symptom:
                     parts = line.strip().split(",")
                     if len(parts) == 3:
                         name_d, specialization, phone = [p.strip() for p in parts]
-                        doctor_list.append({
-                            "name": name_d,
-                            "specialization": specialization.lower(),
-                            "phone": phone
-                            "meet_link": meet_link
-                        })
+                        meet_link = None
+                    elif len(parts) == 4:
+                        name_d, specialization, phone, meet_link = [p.strip() for p in parts]
+                    else:
+                        continue
+                    doctor_list.append({
+                        "name": name_d,
+                        "specialization": specialization.lower(),
+                        "phone": phone,
+                        "meet_link": meet_link
+                    })
 
         # Build the Overpass query
         query = f"""
@@ -122,10 +124,11 @@ if main_symptom:
                 lat = element.get("lat")
                 lon = element.get("lon")
                 st.write(f"**{name_d}**")
-                st.write(f"📞 Phone: xxxxxxx890")
+                st.write(f"📞 Phone: xxxxxxx789")
                 st.write(f"📍 [Location on Map](https://www.openstreetmap.org/?mlat={lat}&mlon={lon}#map=18/{lat}/{lon})")
                 st.write("---")
-        #else:
+
+        else:
             # Fallback local doctors
             fallback_doctors = [d for d in doctor_list if doctor_type in d["specialization"].lower()]
             if fallback_doctors:
@@ -138,7 +141,3 @@ if main_symptom:
                     st.write("---")
             else:
                 st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
-
-
-
-
