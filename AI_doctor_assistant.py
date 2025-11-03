@@ -82,6 +82,7 @@ if main_symptom:
                             "name": name_d,
                             "specialization": specialization.lower(),
                             "phone": phone
+                            "meet_link": meet_link
                         })
 
         # Build the Overpass query
@@ -132,9 +133,12 @@ if main_symptom:
                 for doc in fallback_doctors:
                     st.write(f"**{doc['name']}**")
                     st.write(f"📞 Phone: {doc['phone']}")
+                    if doc.get("meet_link"):
+                        st.markdown(f"[💬 Join Google Meet]({doc['meet_link']})", unsafe_allow_html=True)
                     st.write("---")
             else:
                 st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
+
 
 
 
