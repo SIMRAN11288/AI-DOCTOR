@@ -27,17 +27,29 @@ llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
 # Once the main symptom is entered, proceed to diagnosis directly
 if main_symptom:
     patient_data = f"Name: {name}\nAge: {age}\nSex: {sex}\nMain Symptom: {main_symptom}"
-
+    display_symptoms
     # Disease prediction
     disease_prompt = PromptTemplate.from_template(
         "After analyzing the patient's data, detect the most probable disease:\n\n{patient_data}"
     )
+     # 🧠 Split symptoms using regex to handle commas, semicolons, or multiple spaces
+    symptoms_list = re.split(r'[,\n; ]+', symptoms_input)
+    
+    # Clean empty and capitalize
+    symptoms_list = [sym.strip().capitalize() for sym in symptoms_list if sym.strip()]
 
+    st.markdown("### 🩺 Symptoms You Entered:")
+    for s in symptoms_list:
+        st.markdown(f"- {s}")  # display in bullet points
+
+    # Prepare patient data neatly
+    combined_symptoms = ", ".join(symptoms_list)
+    st.write(combined_symptoms)
     parser = StrOutputParser()
 
     precautions_prompt = PromptTemplate.from_template(
         "Patient data:\n{patient_data}\n\nProbable disease: {disease}\n\n"
-        "Suggest a few precautions to take while suffering from {disease} in simple language so that everyone can understand."
+        "Suggest a very few precautions to take while suffering from {disease} in simple language so that everyone can understand."
     )
 
     format_disease = RunnableLambda(
@@ -143,6 +155,7 @@ if main_symptom:
                     st.write("---")
             else:
                 st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
+
 
 
 
