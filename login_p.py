@@ -5,7 +5,7 @@ def login_page():
   password=st.text_input("Password",type="password")
   login_button=st.button("login")
   if login_button:
-        if username == "admin" and password == "12345":
+        if username == "owner" and password == "12345":
             st.session_state["logged_in"] = True
             st.success("Login successful!")
             st.experimental_rerun()
