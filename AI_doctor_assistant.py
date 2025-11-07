@@ -35,7 +35,7 @@ if main_symptom:
         "After analyzing the patient's data, detect the most probable disease:\n\n{patient_data}"
     )
      # 🧠 Split symptoms using regex to handle commas, semicolons, or multiple spaces
-    symptoms_list = re.split(r'[,\n; ]+', symptoms_input)
+    symptoms_list = re.split(r'[,\n; ]+', main_symptom)
     
     # Clean empty and capitalize
     symptoms_list = [sym.strip().capitalize() for sym in symptoms_list if sym.strip()]
@@ -157,6 +157,7 @@ if main_symptom:
                     st.write("---")
             else:
                 st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
+
 
 
 
