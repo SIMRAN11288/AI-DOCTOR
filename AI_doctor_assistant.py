@@ -30,7 +30,6 @@ llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
 # Once the main symptom is entered, proceed to diagnosis directly
 if main_symptom:
     patient_data = f"Name: {name}\nAge: {age}\nSex: {sex}\nMain Symptom: {main_symptom}"
-    display_symptoms
     # Disease prediction
     disease_prompt = PromptTemplate.from_template(
         "After analyzing the patient's data, detect the most probable disease:\n\n{patient_data}"
@@ -158,6 +157,7 @@ if main_symptom:
                     st.write("---")
             else:
                 st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
+
 
 
 
