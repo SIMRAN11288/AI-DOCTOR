@@ -8,7 +8,7 @@ def login_page():
         if username == "owner" and password == "12345":
             st.session_state["logged_in"] = True
             st.success("Login successful!")
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("Invalid username or password")
           
