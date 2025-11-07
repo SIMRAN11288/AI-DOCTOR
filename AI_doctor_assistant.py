@@ -15,7 +15,7 @@ logged_in = check_login_status()
 
 if not logged_in:
     login_page()
-    
+    st.stop()
 st.title("AI Doctor Assistant")
 st.write('Enter patient details:')
 
@@ -158,6 +158,7 @@ if main_symptom:
                     st.write("---")
             else:
                 st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
+
 
 
 
