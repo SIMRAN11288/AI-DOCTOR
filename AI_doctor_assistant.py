@@ -25,7 +25,7 @@ age = st.text_input("What is your age?")
 sex = st.radio("Sex", ['female', 'male'])
 main_symptom = st.text_input("What is your main symptom?")
 
-llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 
 # Once the main symptom is entered, proceed to diagnosis directly
 if main_symptom:
@@ -157,6 +157,7 @@ if main_symptom:
                     st.write("---")
             else:
                 st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
+
 
 
 
