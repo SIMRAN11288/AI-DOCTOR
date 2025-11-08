@@ -34,7 +34,7 @@ if main_symptom:
     disease_prompt = PromptTemplate.from_template(
         "After analyzing the patient's data, detect the most probable disease:\n\n{patient_data}"
     )
-   symptom_extraction_prompt = PromptTemplate.from_template("""
+    symptom_extraction_prompt = PromptTemplate.from_template("""
     Extract all distinct symptoms mentioned in the following text and list them clearly:
     Text: "{symptom_text}"
     """)
@@ -158,6 +158,7 @@ if main_symptom:
                     st.write("---")
             else:
                 st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
+
 
 
 
