@@ -41,7 +41,7 @@ if main_symptom:
      parser = StrOutputParser()
 
     chain = symptom_extraction_prompt | llm | parser
-    clean_symptoms = chain.invoke({"symptom_text": symptoms_input})
+    clean_symptoms = chain.invoke({"symptom_text": main_symptom})
 
     st.markdown("### 🩺 Symptoms You Entered:")
     # for s in clean_symptoms:
@@ -158,6 +158,7 @@ if main_symptom:
                     st.write("---")
             else:
                 st.warning(f"No {doctor_type} found near {current_location}. Try a nearby city.")
+
 
 
 
