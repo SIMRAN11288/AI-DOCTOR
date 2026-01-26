@@ -10,4 +10,4 @@ It predicts probable diseases, suggests precautions, and lists nearby or local d
    ```bash
    pip install -r requirements.txt
 2. Add your API key in .env file: GOOGLE_API_KEY=your_api_key_here
-3. Run the app:https://ai-doctor-jjuhjslwomswetwmwhf5dt.streamlit.app/
+3. Run the app:https://ai-doctor-jjuhjslwomswetwmwhf5dt.streamlit.app/    to run the app Owner is the login and 12345 is the password
